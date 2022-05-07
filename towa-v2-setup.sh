@@ -16,17 +16,17 @@ echo "Download v2ray config file..."
 curl -L $raw_github_url/$v2_config_file -o ~/$v2_config_file
 
 echo "Update v2ray config file..."
-sed -i '<PORT>' $1 ~/v2-kcp-config.json
-sed -i '<CLIENT_ID>' $1 ~/v2-kcp-config.json
+sed -i "s/<PORT>/$1/g" ~/$v2_config_file
+sed -i "s/<CLIENT_ID>/$2/g" ~/$v2_config_file
 
 echo "Copy v2ray config file to working path..."
 cp ~/$v2_config_file /usr/local/etc/v2ray/config.json
 
 echo "Open $port in firewall"
-filewall-cmd --add-port=$port/udp --zone=public --permanent
+firewall-cmd --add-port=$port/udp --zone=public --permanent
 systemctl reload firewalld.service
 firewall-cmd --list-ports
 
 echo "Start v2ray service"
 systemctl start v2ray
-systemctl status v2ray
+systemctl | grep v2ray
