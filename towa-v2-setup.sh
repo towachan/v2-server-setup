@@ -3,7 +3,7 @@
 port=$1
 client_id=$2
 
-v2_config_file="v2-kcp-config.json"
+v2_config_file="v2-kcp-config.json.j2"
 raw_github_url="https://raw.githubusercontent.com/towachan/v2-server-setup/main"
 
 echo "Download and install v2ray..."
@@ -16,8 +16,8 @@ echo "Download v2ray config file..."
 curl -L $raw_github_url/$v2_config_file -o ~/$v2_config_file
 
 echo "Update v2ray config file..."
-sed -i "s/<PORT>/$1/g" ~/$v2_config_file
-sed -i "s/<CLIENT_ID>/$2/g" ~/$v2_config_file
+sed -i "s/{{PORT}}/$port/g" ~/$v2_config_file
+sed -i "s/{{CLIENT_ID}}/$client_id/g" ~/$v2_config_file
 
 echo "Copy v2ray config file to working path..."
 cp ~/$v2_config_file /usr/local/etc/v2ray/config.json
