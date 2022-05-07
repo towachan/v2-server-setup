@@ -92,6 +92,7 @@ systemctl | grep nginx
 
 echo "======================Steup cron job======================"
 curl -L $raw_github_url/$cert_renew_file -o ~/$cert_renew_file
+chmod u+x ~/$cert_renew_file
 echo "0 0 1 * * ~/cert-renewal.sh > /dev/null" > ~/cronjob
 crontab ~/cronjob
 crontab -l
