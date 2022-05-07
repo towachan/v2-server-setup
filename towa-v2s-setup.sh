@@ -40,12 +40,12 @@ yum -y install socat
 curl  https://get.acme.sh | sh
 
 echo "======================Register acme======================"
+~/.acme.sh/acme.sh --set-default-ca --server letsencrypt
 ~/.acme.sh/acme.sh --register-account -m $email
 
 echo "======================Create ssl cert======================"
 export GD_Key=$gd_key
 export GD_Secret=$gd_secret
-~/.acme.sh/acme.sh --set-default-ca --server letsencrypt
 ~/.acme.sh/acme.sh --issue -d $server_name --dns dns_gd --keylength ec-256 --force
 ~/.acme.sh/acme.sh --installcert -d $server_name --ecc \
     --fullchain-file $nginx_crt_file \
