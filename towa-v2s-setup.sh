@@ -14,6 +14,9 @@ nginx_config_file="nginx.conf.j2"
 raw_github_url="https://raw.githubusercontent.com/towachan/v2-server-setup/main"
 nginx_crt_file="\/etc\/v2ray\/v2ray.crt"
 nginx_crt_key="\/etc\/v2ray\/v2ray.key"
+nginx_crt_file_path=/etc/v2ray/v2ray.crt
+nginx_crt_key_path=/etc/v2ray/v2ray.key
+
 
 echo "======================Download and install v2ray======================"
 bash <(curl -L https://raw.githubusercontent.com/v2fly/fhs-install-v2ray/master/install-release.sh)
@@ -48,8 +51,8 @@ export GD_Key=$gd_key
 export GD_Secret=$gd_secret
 ~/.acme.sh/acme.sh --issue -d $server_name --dns dns_gd --keylength ec-256 --force
 ~/.acme.sh/acme.sh --installcert -d $server_name --ecc \
-    --fullchain-file $nginx_crt_file \
-    --key-file $nginx_crt_key
+    --fullchain-file $nginx_crt_file_path \
+    --key-file $nginx_crt_key_path
 
 echo "======================Install nginx======================"
 yum -y install nginx
