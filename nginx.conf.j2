@@ -84,7 +84,7 @@ http {
             location = /50x.html {
         }
 
-        location {{PATH}} {
+        location /{{PATH}} {
           if ($http_upgrade != "websocket") {
             return 404;
           }
