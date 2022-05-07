@@ -44,7 +44,7 @@ echo "======================Register acme======================"
 
 echo "======================Create ssl cert======================"
 export GD_Key=$gd_key
-export GD_Key=$gd_secret
+export GD_Secret=$gd_secret
 ~/.acme.sh/acme.sh --issue -d $server_name --dns dns_gd --keylength ec-256 --force
 ~/.acme.sh/acme.sh --installcert -d $server_name --ecc \
     --fullchain-file $nginx_crt_file \
