@@ -38,7 +38,7 @@ yum -y install socat
 curl  https://get.acme.sh | sh
 
 echo "Register acme..."
-acme.sh --register-account -m $email
+~/.acme.sh/acme.sh --register-account -m $email
 
 echo "Create ssl cert..."
 ~/.acme.sh/acme.sh --issue -d $server_name --standalone --keylength ec-256 --force
@@ -50,7 +50,7 @@ echo "Install nginx..."
 yum -y install nginx
 
 echo "Download nginx config file..."
-curl -L $raw_github_url/$v2_config_file -o ~/$nginx_config_file
+curl -L $raw_github_url/$nginx_config_file -o ~/$nginx_config_file
 
 echo "Update nginx config file"
 sed -i "s/{{PORT}}/$nginx_port/g" ~/$nginx_config_file
@@ -60,6 +60,7 @@ sed -i "s/{{CERT_KEY_PATH}}/$nginx_crt_key/g" ~/$nginx_config_file
 sed -i "s/{{PATH}}/$path/g" ~/$nginx_config_file
 sed -i "s/{{PROXY_PORT}}/$port/g" ~/$nginx_config_file
 
+echo "Copy v2ray nginx file to working path..."
 cp ~/$nginx_config_file /etc/nginx/nginx.conf
 
 echo "Set SELINUX premissive..."
