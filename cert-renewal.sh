@@ -15,4 +15,4 @@ echo "Going to renew $server_name"
 echo "Restart nginx"
 systemctl force-reload nginx
 systemctl restart nginx
-systemctl grep | nginx
+systemctl | grep nginx
