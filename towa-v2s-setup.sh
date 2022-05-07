@@ -6,12 +6,14 @@ path=$3
 nginx_port=$4
 server_name=$5
 email=$6
+gd_key=$7
+gd_secret=$8
 
 v2_config_file="v2-ws-config.json.j2"
 nginx_config_file="nginx.conf.j2"
 raw_github_url="https://raw.githubusercontent.com/towachan/v2-server-setup/main"
-nginx_crt_file=/etc/v2ray/v2ray.crt
-nginx_crt_key=/etc/v2ray/v2ray.key
+nginx_crt_file="\/etc\/v2ray\/v2ray.crt"
+nginx_crt_key="\/etc\/v2ray\/v2ray.key"
 
 echo "======================Download and install v2ray======================"
 bash <(curl -L https://raw.githubusercontent.com/v2fly/fhs-install-v2ray/master/install-release.sh)
@@ -41,7 +43,9 @@ echo "======================Register acme======================"
 ~/.acme.sh/acme.sh --register-account -m $email
 
 echo "======================Create ssl cert======================"
-~/.acme.sh/acme.sh --issue -d $server_name --standalone --keylength ec-256 --force
+export GD_Key=$gd_key
+export GD_Key=$gd_secret
+~/.acme.sh/acme.sh --issue -d $server_name --dns dns_gd --keylength ec-256 --force
 ~/.acme.sh/acme.sh --installcert -d $server_name --ecc \
     --fullchain-file $nginx_crt_file \
     --key-file $nginx_crt_key
