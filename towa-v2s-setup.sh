@@ -5,6 +5,7 @@ client_id=$2
 path=$3
 nginx_port=$4
 server_name=$5
+email=$6
 
 v2_config_file="v2-ws-config.json.j2"
 nginx_config_file="nginx.conf.j2"
@@ -29,9 +30,15 @@ sed -i "s/{{PATH}}/$path/g" ~/$v2_config_file
 echo "Copy v2ray config file to working path..."
 cp ~/$v2_config_file /usr/local/etc/v2ray/config.json
 
+echo "create /etc/v2ray"
+mkdir -p /etc/v2ray
+
 echo "Install acme..."
 yum -y install socat 
 curl  https://get.acme.sh | sh
+
+echo "Register acme..."
+acme.sh --register-account -m $email
 
 echo "Create ssl cert..."
 ~/.acme.sh/acme.sh --issue -d $server_name --standalone --keylength ec-256 --force
@@ -41,6 +48,9 @@ echo "Create ssl cert..."
 
 echo "Install nginx..."
 yum -y install nginx
+
+echo "Download nginx config file..."
+curl -L $raw_github_url/$v2_config_file -o ~/$nginx_config_file
 
 echo "Update nginx config file"
 sed -i "s/{{PORT}}/$nginx_port/g" ~/$nginx_config_file
@@ -56,7 +66,7 @@ echo "Set SELINUX premissive..."
 setenforce 0
 sed -i "s/SELINUX=enforcing/SELINUX=permissive/g" /etc/selinux/config
 
-echo "Open $port in firewall..."
+echo "Open $nginx_port in firewall..."
 firewall-cmd --add-port=$nginx_port/tcp --zone=public --permanent
 systemctl reload firewalld.service
 firewall-cmd --list-ports
