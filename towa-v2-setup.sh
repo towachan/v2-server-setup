@@ -1,4 +1,4 @@
-#/bin/sh
+#/bin/bash
 
 port=$1
 client_id=$2

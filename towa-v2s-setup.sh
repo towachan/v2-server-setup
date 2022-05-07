@@ -1,4 +1,4 @@
-#/bin/sh
+#/bin/bash
 
 port=$1
 client_id=$2
@@ -11,6 +11,7 @@ gd_secret=$8
 
 v2_config_file="v2-ws-config.json.j2"
 nginx_config_file="nginx.conf.j2"
+cert_renew_file="cert-renewal.sh"
 raw_github_url="https://raw.githubusercontent.com/towachan/v2-server-setup/main"
 nginx_crt_file="\/etc\/v2ray\/v2ray.crt"
 nginx_crt_key="\/etc\/v2ray\/v2ray.key"
@@ -78,7 +79,7 @@ sed -i "s/SELINUX=enforcing/SELINUX=permissive/g" /etc/selinux/config
 echo "======================Open $nginx_port in firewall======================"
 firewall-cmd --add-port=$nginx_port/tcp --zone=public --permanent
 systemctl reload firewalld.service
-firewall-cmd --list-ports
+firewall-cmd --list-all
 
 echo "======================Start v2ray service======================"
 systemctl start v2ray
@@ -88,3 +89,8 @@ echo "======================Start nginx======================"
 systemctl force-reload nginx
 systemctl restart nginx
 systemctl | grep nginx
+
+echo "======================Steup cron job======================"
+curl -L $raw_github_url/$cert_renew_file -o ~/$cert_renew_file
+echo "* * 1 0 0 ~/cert-renewal.sh > /dev/null" > ~/cronjob
+crontab ~/cronjob
