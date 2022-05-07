@@ -1,39 +1,38 @@
 {
-    "log": {
-      "loglevel": "none",
-      "access": "/var/log/v2ray/access.log",
-      "error": "/var/log/v2ray/error.log"
-    },
-    "inbounds": [
-      {
-        "port": "<PORT>",
-        "protocol": "vmess",
-        "settings": {
-          "clients": [
-            {
-              "id": "<CLIENT_ID>",
-              "alterId": 0
-            }
-          ]
-        },
-        "streamSettings": {
-          "network": "kcp",
-          "kcpSettings": {
-            "uplinkCapacity": 5,
-            "downlinkCapacity": 100,
-            "congestion": true,
-            "header": {
-              "type": "none"
-            }
+  "log": {
+    "loglevel": "none",
+    "access": "/var/log/v2ray/access.log",
+    "error": "/var/log/v2ray/error.log"
+  },
+  "inbounds": [
+    {
+      "port": "<PORT>",
+      "protocol": "vmess",
+      "settings": {
+        "clients": [
+          {
+            "id": "<CLIENT_ID>",
+            "alterId": 0
+          }
+        ]
+      },
+      "streamSettings": {
+        "network": "kcp",
+        "kcpSettings": {
+          "uplinkCapacity": 5,
+          "downlinkCapacity": 100,
+          "congestion": true,
+          "header": {
+            "type": "none"
           }
         }
       }
-    ],
-    "outbounds": [
-      {
-        "protocol": "freedom",
-        "settings": {}
-      }
-    ]
-  }
-  
+    }
+  ],
+  "outbounds": [
+    {
+      "protocol": "freedom",
+      "settings": {}
+    }
+  ]
+}
