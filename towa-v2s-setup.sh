@@ -41,11 +41,11 @@ mkdir -p /etc/v2ray
 
 echo "======================Install acme======================"
 yum -y install socat 
-curl  https://get.acme.sh | sh
+curl  https://get.acme.sh | sh -s email=$email
 
 echo "======================Register acme======================"
 ~/.acme.sh/acme.sh --set-default-ca --server letsencrypt
-~/.acme.sh/acme.sh --register-account -m $email
+# ~/.acme.sh/acme.sh --register-account -m $email
 
 echo "======================Create ssl cert======================"
 export GD_Key=$gd_key
@@ -76,14 +76,14 @@ echo "<!DOCTYPE html><html><body><p>I am a test page.</p></body></html>" > /web/
 echo "======================Copy v2ray nginx file to working path======================"
 cp ~/$nginx_config_file /etc/nginx/nginx.conf
 
-echo "======================Set SELINUX premissive======================"
-setenforce 0
-sed -i "s/SELINUX=enforcing/SELINUX=permissive/g" /etc/selinux/config
+# echo "======================Set SELINUX premissive======================"
+# setenforce 0
+# sed -i "s/SELINUX=enforcing/SELINUX=permissive/g" /etc/selinux/config
 
-echo "======================Open $nginx_port in firewall======================"
-firewall-cmd --add-port=$nginx_port/tcp --zone=public --permanent
-systemctl reload firewalld.service
-firewall-cmd --list-all
+# echo "======================Open $nginx_port in firewall======================"
+# firewall-cmd --add-port=$nginx_port/tcp --zone=public --permanent
+# systemctl reload firewalld.service
+# firewall-cmd --list-all
 
 echo "======================Start v2ray service======================"
 systemctl start v2ray
