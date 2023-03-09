@@ -69,6 +69,10 @@ sed -i "s/{{CERT_KEY_PATH}}/$nginx_crt_key/g" ~/$nginx_config_file
 sed -i "s/{{PATH}}/$path/g" ~/$nginx_config_file
 sed -i "s/{{PROXY_PORT}}/$port/g" ~/$nginx_config_file
 
+echo "======================Create web root======================"
+mkdir /web
+echo "<!DOCTYPE html><html><body><p>I am a test page.</p></body></html>" > /web/index.html
+
 echo "======================Copy v2ray nginx file to working path======================"
 cp ~/$nginx_config_file /etc/nginx/nginx.conf
 
