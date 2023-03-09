@@ -60,7 +60,8 @@ http {
         listen       {{PORT}} ssl;
         listen       [::]:{{PORT}} ssl;
         server_name  {{SERVER_NAME}};
-        root         /usr/share/nginx/html;
+        root         /web;
+        index        index.html index.htm;
 
         ssl_certificate       {{CERT_PATH}}; 
         ssl_certificate_key   {{CERT_KEY_PATH}};
