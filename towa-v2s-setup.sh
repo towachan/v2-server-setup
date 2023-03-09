@@ -41,6 +41,7 @@ mkdir -p /etc/v2ray
 
 echo "======================Install acme======================"
 yum -y install socat 
+yum -y install tar
 curl  https://get.acme.sh | sh -s email=$email
 
 echo "======================Register acme======================"
