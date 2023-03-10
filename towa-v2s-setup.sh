@@ -46,11 +46,11 @@ curl  https://get.acme.sh | sh -s email=$email
 
 echo "======================Register acme======================"
 ~/.acme.sh/acme.sh --set-default-ca --server letsencrypt
-# ~/.acme.sh/acme.sh --register-account -m $email
 
 echo "======================Create ssl cert======================"
 export GD_Key=$gd_key
 export GD_Secret=$gd_secret
+# issue on CentOS 7 - https://github.com/acmesh-official/acme.sh/issues/3808
 ~/.acme.sh/acme.sh --issue -d $server_name --dns dns_gd --keylength ec-256 --force
 ~/.acme.sh/acme.sh --installcert -d $server_name --ecc \
     --fullchain-file $nginx_crt_file_path \
@@ -79,9 +79,10 @@ cp ~/$nginx_config_file /etc/nginx/nginx.conf
 
 # echo "======================Set SELINUX premissive======================"
 # setenforce 0
-# sed -i "s/SELINUX=enforcing/SELINUX=permissive/g" /etc/selinux/config
+# sed -i "s/SELINUX=disabled/SELINUX=permissive/g" /etc/selinux/config
 
 # echo "======================Open $nginx_port in firewall======================"
+# firewall-offline-cmd --add-port=28453/tcp --zone=public
 # firewall-cmd --add-port=$nginx_port/tcp --zone=public --permanent
 # systemctl reload firewalld.service
 # firewall-cmd --list-all
@@ -96,6 +97,7 @@ systemctl restart nginx
 systemctl | grep nginx
 
 echo "======================Steup cron job======================"
+echo "$server_name" > ~/domain
 curl -L $raw_github_url/$cert_renew_file -o ~/$cert_renew_file
 chmod u+x ~/$cert_renew_file
 echo "0 0 1 * * ~/cert-renewal.sh > /dev/null" > ~/cronjob
