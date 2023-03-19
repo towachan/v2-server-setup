@@ -6,9 +6,8 @@ path=$3
 nginx_port=$4
 server_name=$5
 email=$6
-cf_token=$7
-cf_acct=$8
-cf_zone=$9
+gd_key=$7
+gd_secret=$8
 
 v2_config_file="v2-ws-config.json.j2"
 nginx_config_file="nginx.conf.j2"
@@ -49,11 +48,10 @@ echo "======================Register acme======================"
 ~/.acme.sh/acme.sh --set-default-ca --server letsencrypt
 
 echo "======================Create ssl cert======================"
-export CF_Token=$cf_token
-export CF_Account_ID=$cf_acct
-export CF_Zone_ID=$cf_zone
+export GD_Key=$gd_key
+export GD_Secret=$gd_secret
 # issue on CentOS 7 - https://github.com/acmesh-official/acme.sh/issues/3808
-~/.acme.sh/acme.sh --issue -d $server_name --dns dns_cf --keylength ec-256 --force
+~/.acme.sh/acme.sh --issue -d $server_name --dns dns_gd --keylength ec-256 --force
 ~/.acme.sh/acme.sh --installcert -d $server_name --ecc \
     --fullchain-file $nginx_crt_file_path \
     --key-file $nginx_crt_key_path
