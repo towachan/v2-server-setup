@@ -87,6 +87,16 @@ cp ~/$nginx_config_file /etc/nginx/nginx.conf
 # systemctl reload firewalld.service
 # firewall-cmd --list-all
 
+echo "======================Install CF WARP======================"
+rpm -ivh https://pkg.cloudflareclient.com/cloudflare-release-el8.rpm
+yum -y install cloudflare-warp
+warp-cli register
+warp-cli set-mode proxy
+warp-cli connect
+warp-cli enable-always-on
+export ALL_PROXY=socks5://127.0.0.1:40000
+curl ifconfig.me
+
 echo "======================Start v2ray service======================"
 systemctl start v2ray
 systemctl | grep v2ray

@@ -18,12 +18,43 @@
           "path": "/{{PATH}}"
         }
       }
+    },
+    "sniffing": {
+      "enabled": true,
+      "destOverride": ["http", "tls"]
     }
   ],
   "outbounds": [
     {
       "protocol": "freedom",
-      "settings": {}
+      "settings": {},
+      "tag": "default"
+    },
+    {
+      "tag": "cf_warp_out",
+      "protocol": "socks",
+      "settings": {
+        "servers": [
+          {
+            "address": "127.0.0.1",
+            "port": 40000
+          }
+        ]
+      }
     }
-  ]
+  ],
+  "routing": {
+    "domainStrategy": "AsIs",
+    "domainMatcher": "mph",
+    "rules": [
+      {
+        "domainMatcher": "mph",
+        "type": "field",
+        "domains": ["openai.com"],
+        "network": "tcp",
+        "protocol": ["http", "tls"],
+        "outboundTag": "cf_warp_out"
+      }
+    ]
+  }
 }
