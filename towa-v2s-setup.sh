@@ -17,7 +17,8 @@ nginx_crt_file="\/etc\/v2ray\/v2ray.crt"
 nginx_crt_key="\/etc\/v2ray\/v2ray.key"
 nginx_crt_file_path=/etc/v2ray/v2ray.crt
 nginx_crt_key_path=/etc/v2ray/v2ray.key
-
+systemd_folder=/etc/systemd/system
+override_conf=override.conf
 
 echo "======================Download and install v2ray======================"
 bash <(curl -L https://raw.githubusercontent.com/v2fly/fhs-install-v2ray/master/install-release.sh)
@@ -87,9 +88,20 @@ cp ~/$nginx_config_file /etc/nginx/nginx.conf
 # systemctl reload firewalld.service
 # firewall-cmd --list-all
 
+
 echo "======================Install CF WARP======================"
 rpm -ivh https://pkg.cloudflareclient.com/cloudflare-release-el8.rpm
 yum -y install cloudflare-warp
+
+echo "======================Extend FD limit======================"
+curl -L "$raw_github_url/$override_conf" > "$systemd_folder/v2ray.service.d/$override_conf"
+curl -L "$raw_github_url/$override_conf" > "$systemd_folder/nginx.service.d/$override_conf"
+curl -L "$raw_github_url/$override_conf" > "$systemd_folder/warp-svc.service/$override_conf"
+systemctl daemon-reload
+
+echo "======================Connect CF WARP======================"
+systemctl restart warp-svc
+systemctl | grep warp-svc
 warp-cli register
 warp-cli set-mode proxy
 warp-cli connect
