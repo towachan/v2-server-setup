@@ -10,6 +10,8 @@ pid /run/nginx.pid;
 # Load dynamic modules. See /usr/share/doc/nginx/README.dynamic.
 include /usr/share/nginx/modules/*.conf;
 
+worker_rlimit_nofile 10240;
+
 events {
     worker_connections 1024;
 }

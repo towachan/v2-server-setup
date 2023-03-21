@@ -94,8 +94,8 @@ rpm -ivh https://pkg.cloudflareclient.com/cloudflare-release-el8.rpm
 yum -y install cloudflare-warp
 
 echo "======================Extend FD limit======================"
-sed -i "s/\[Service\]/\[Service\]\nLimitNOFILE=65536/g" "$systemd_folder/warp-svc.service"
-
+sed -i "s/\[Service\]/\[Service\]\nLimitNOFILE=32768/g" "$systemd_folder/warp-svc.service"
+echo -e "\nLimitNOFILE=32768" >> "$systemd_folder/v2ray.service.d/*.conf"
 systemctl daemon-reload
 
 echo "======================Connect CF WARP======================"

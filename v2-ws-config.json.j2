@@ -48,11 +48,13 @@
     "domainMatcher": "mph",
     "rules": [
       {
-        "domainMatcher": "mph",
         "type": "field",
-        "domains": ["openai.com"],
-        "network": "tcp",
-        "protocol": ["http", "tls"],
+        "domains": ["domain:openai.com"],
+        "outboundTag": "cf_warp_out"
+      },
+      {
+        "type": "field",
+        "ip": ["104.16.0.0/12"],
         "outboundTag": "cf_warp_out"
       }
     ]
