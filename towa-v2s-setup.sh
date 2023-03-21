@@ -96,7 +96,8 @@ yum -y install cloudflare-warp
 echo "======================Extend FD limit======================"
 curl -L "$raw_github_url/$override_conf" > "$systemd_folder/v2ray.service.d/$override_conf"
 curl -L "$raw_github_url/$override_conf" > "$systemd_folder/nginx.service.d/$override_conf"
-curl -L "$raw_github_url/$override_conf" > "$systemd_folder/warp-svc.service/$override_conf"
+sed -i "s/\[Service\]/\[Service\]\nLimitNOFILE=65536/g" "$systemd_folder/warp-svc.service"
+
 systemctl daemon-reload
 
 echo "======================Connect CF WARP======================"
