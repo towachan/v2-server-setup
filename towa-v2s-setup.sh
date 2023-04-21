@@ -20,6 +20,9 @@ nginx_crt_key_path=/etc/v2ray/v2ray.key
 systemd_folder=/etc/systemd/system
 override_conf=override.conf
 
+echo "======================Set system timezone======================"
+timedatectl set-timezone Asia/Hong_Kong
+
 echo "======================Download and install v2ray======================"
 bash <(curl -L https://raw.githubusercontent.com/v2fly/fhs-install-v2ray/master/install-release.sh)
 
