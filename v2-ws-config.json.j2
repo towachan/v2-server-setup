@@ -29,34 +29,6 @@
       "protocol": "freedom",
       "settings": {},
       "tag": "default"
-    },
-    {
-      "tag": "cf_warp_out",
-      "protocol": "socks",
-      "settings": {
-        "servers": [
-          {
-            "address": "127.0.0.1",
-            "port": 40000
-          }
-        ]
-      }
     }
-  ],
-  "routing": {
-    "domainStrategy": "AsIs",
-    "domainMatcher": "mph",
-    "rules": [
-      {
-        "type": "field",
-        "domains": ["domain:openai.com"],
-        "outboundTag": "cf_warp_out"
-      },
-      {
-        "type": "field",
-        "ip": ["104.16.0.0/12"],
-        "outboundTag": "cf_warp_out"
-      }
-    ]
-  }
+  ]
 }
