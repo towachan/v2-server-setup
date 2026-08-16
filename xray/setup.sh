@@ -120,6 +120,7 @@ chmod +x ~/log-clean.sh
 # xray config
 curl -L --fail --retry 3 -H 'Cache-Control: no-cache, no-store, must-revalidate' -H 'Pragma: no-cache' -H 'Expires: 0' -o ~/tmpl/tmpl_xray_config.json https://raw.githubusercontent.com/towachan/v2-server-setup/refs/heads/main/xray/tmpl/tmpl_xray_config.json?$(date +%s)
 render_template_vars ~/tmpl/tmpl_xray_config.json /usr/local/etc/xray/config.json
+chmod a+r /usr/local/etc/xray/config.json
 
 sudo xray run -test -config /usr/local/etc/xray/config.json
 sudo systemctl enable --now xray
