@@ -1,0 +1,73 @@
+{
+  "outbound": {
+    "protocol": "vless",
+    "settings": {
+      "address": "${HOST_IP}",
+      "port": 443,
+      "id": "${UUID_2}",
+      "flow": "",
+      "encryption": "${VLESS_ENC}"
+    },
+    "streamSettings": {
+      "network": "xhttp",
+      "security": "reality",
+      "realitySettings": {
+        "publicKey": "${PUBLIC_KEY}",
+        "fingerprint": "chrome",
+        "serverName": "${REALITY_DOMAIN}",
+        "shortId": "${SHORT_ID}"
+      },
+      "xhttpSettings": {
+        "path": "${XHTTP_PATH}",
+        "host": "${CDN_DOMAIN}",
+        "mode": "auto",
+        "extra": {
+          "xPaddingObfsMode": true,
+          "xPaddingKey": "x_padding",
+          "xPaddingHeader": "Referer",
+          "xPaddingPlacement": "queryInHeader",
+          "xPaddingMethod": "tokenish",
+          "xmux": {
+            "maxConcurrency": "16-32",
+            "cMaxReuseTimes": 0,
+            "hMaxReusableSecs": "1800-3000",
+            "hKeepAlivePeriod": 0
+          },
+          "downloadSettings": {
+            "address": "${CDN_DOMAIN}",
+            "port": 443,
+            "network": "xhttp",
+            "security": "tls",
+            "tlsSettings": {
+              "serverName": "${CDN_DOMAIN}",
+              "allowInsecure": false,
+              "alpn": [
+                "h2"
+              ],
+              "fingerprint": "chrome"
+            },
+            "xhttpSettings": {
+              "host": "${CDN_DOMAIN}",
+              "path": "${XHTTP_PATH}",
+              "mode": "auto",
+              "extra": {
+                "xPaddingObfsMode": true,
+                "xPaddingKey": "x_padding",
+                "xPaddingHeader": "Referer",
+                "xPaddingPlacement": "queryInHeader",
+                "xPaddingMethod": "tokenish",
+                "xmux": {
+                  "maxConcurrency": "16-32",
+                  "cMaxReuseTimes": 0,
+                  "hMaxReusableSecs": "1800-3000",
+                  "hKeepAlivePeriod": 0
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "remarks": "${SERVER_NAME}_mode-5"
+}

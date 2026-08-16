@@ -1,0 +1,44 @@
+{
+  "outbound": {
+    "protocol": "vless",
+    "settings": {
+      "address": "${CDN_DOMAIN}",
+      "port": 443,
+      "id": "${UUID_2}",
+      "flow": "",
+      "encryption": "${VLESS_ENC}"
+    },
+    "streamSettings": {
+      "network": "xhttp",
+      "security": "tls",
+      "tlsSettings": {
+        "serverName": "${CDN_DOMAIN}",
+        "alpn": [
+          "h2"
+        ],
+        "fingerprint": "chrome",
+        "allowInsecure": false
+      },
+      "xhttpSettings": {
+        "path": "${XHTTP_PATH}",
+        "host": "${CDN_DOMAIN}",
+        "mode": "auto",
+        "extra": {
+          "xPaddingObfsMode": true,
+          "xPaddingKey": "x_padding",
+          "xPaddingHeader": "Referer",
+          "xPaddingPlacement": "queryInHeader",
+          "xPaddingMethod": "tokenish",
+          "scMinPostsIntervalMs": 30,
+          "xmux": {
+            "maxConcurrency": "16-32",
+            "cMaxReuseTimes": 0,
+            "hMaxReusableSecs": "1800-3000",
+            "hKeepAlivePeriod": 0
+          }
+        }
+      }
+    }
+  },
+  "remarks": "${SERVER_NAME}_mode-4"
+}

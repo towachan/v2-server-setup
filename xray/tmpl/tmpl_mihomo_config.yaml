@@ -1,0 +1,112 @@
+proxies:
+  - name: ${SERVER_NAME}_mode-3
+    type: vless
+    server: ${CDN_DOMAIN}
+    port: 443
+    uuid: ${UUID_2}
+    udp: true
+    tls: true
+    encryption: ${VLESS_ENC}
+    network: xhttp
+    alpn:
+      - h2
+    servername: ${CDN_DOMAIN}
+    client-fingerprint: chrome
+    xhttp-opts:
+      host: ${CDN_DOMAIN}
+      path: ${XHTTP_PATH}
+      mode: auto
+      x-padding-key: "x_padding"
+      x-padding-header: "Referer"
+      x-padding-placement: "queryInHeader"
+      x-padding-method: "tokenish"
+      reuse-settings:
+        max-concurrency: "16-32"
+        c-max-reuse-times: "0"
+        h-max-reusable-secs: "1800-3000"
+      download-settings:
+        path: ${XHTTP_PATH}
+        server: ${VPS_IP}
+        port: 443
+        tls: true
+        alpn:
+          - h2
+        servername: ${REALITY_DOMAIN}
+        client-fingerprint: chrome
+        reality-opts:
+          public-key: ${PUBLIC_KEY}
+          short-id: ${SHORT_ID}
+        reuse-settings:
+          max-concurrency: "16-32"
+          c-max-reuse-times: "0"
+          h-max-reusable-secs: "1800-3000"
+
+  - name: ${SERVER_NAME}_mode-4
+    type: vless
+    server: ${CDN_DOMAIN}
+    port: 443
+    uuid: ${UUID_2}
+    udp: true
+    tls: true
+    network: xhttp
+    alpn:
+      - h2
+    servername: ${CDN_DOMAIN}
+    client-fingerprint: chrome
+    encryption: ${VLESS_ENC}
+    xhttp-opts:
+      host: ${CDN_DOMAIN}
+      path: ${XHTTP_PATH}
+      mode: auto
+      x-padding-key: "x_padding"
+      x-padding-header: "Referer"
+      x-padding-placement: "queryInHeader"
+      x-padding-method: "tokenish"
+      reuse-settings:
+        max-concurrency: "16-32"
+        c-max-reuse-times: "0"
+        h-max-reusable-secs: "1800-3000"
+
+  - name: ${SERVER_NAME}_mode-5
+    type: vless
+    server: ${HOST_IP}
+    port: 443
+    uuid: ${UUID_2}
+    udp: true
+    tls: true
+    network: xhttp
+    alpn:
+      - h2
+    servername: ${REALITY_DOMAIN}
+    client-fingerprint: chrome
+    reality-opts:
+      public-key: ${PUBLIC_KEY}
+      short-id: ${SHORT_ID}
+    encryption: ${VLESS_ENC}
+    xhttp-opts:
+      host: ${CDN_DOMAIN}
+      path: ${XHTTP_PATH}
+      mode: auto
+      x-padding-key: "x_padding"
+      x-padding-header: "Referer"
+      x-padding-placement: "queryInHeader"
+      x-padding-method: "tokenish"
+      reuse-settings:
+        max-concurrency: "16-32"
+        c-max-reuse-times: "0"
+        h-max-reusable-secs: "1800-3000"
+      download-settings:
+        host: ${CDN_DOMAIN}
+        path: ${XHTTP_PATH}
+        server: ${CDN_DOMAIN}
+        port: 443
+        tls: true
+        alpn:
+          - h2
+        servername: ${CDN_DOMAIN}
+        client-fingerprint: chrome
+        reality-opts: { public-key: "" }
+        reuse-settings:
+          max-concurrency: "16-32"
+          c-max-reuse-times: "0"
+          h-max-reusable-secs: "1800-3000"

@@ -1,0 +1,76 @@
+{
+  "outbound": {
+    "protocol": "vless",
+    "settings": {
+      "address": "${CDN_DOMAIN}",
+      "port": 443,
+      "id": "${UUID_2}",
+      "flow": "",
+      "encryption": "${VLESS_ENC}"
+    },
+    "tag": "proxy",
+    "streamSettings": {
+      "network": "xhttp",
+      "security": "tls",
+      "tlsSettings": {
+        "serverName": "${CDN_DOMAIN}",
+        "alpn": [
+          "h2"
+        ],
+        "fingerprint": "chrome",
+        "allowInsecure": false
+      },
+      "xhttpSettings": {
+        "path": "${XHTTP_PATH}",
+        "host": "${CDN_DOMAIN}",
+        "mode": "auto",
+        "extra": {
+          "xPaddingObfsMode": true,
+          "xPaddingKey": "x_padding",
+          "xPaddingHeader": "Referer",
+          "xPaddingPlacement": "queryInHeader",
+          "xPaddingMethod": "tokenish",
+          "scMinPostsIntervalMs": 30,
+          "xmux": {
+            "maxConcurrency": "16-32",
+            "cMaxReuseTimes": 0,
+            "hMaxReusableSecs": "1800-3000",
+            "hKeepAlivePeriod": 0
+          },
+          "downloadSettings": {
+            "address": "${HOST_IP}",
+            "port": 443,
+            "network": "xhttp",
+            "security": "reality",
+            "realitySettings": {
+              "show": false,
+              "serverName": "${REALITY_DOMAIN}",
+              "fingerprint": "chrome",
+              "shortId": "${SHORT_ID}",
+              "publicKey": "${PUBLIC_KEY}"
+            },
+            "xhttpSettings": {
+              "host": "",
+              "path": "${XHTTP_PATH}",
+              "mode": "auto",
+              "extra": {
+                "xPaddingObfsMode": true,
+                "xPaddingKey": "x_padding",
+                "xPaddingHeader": "Referer",
+                "xPaddingPlacement": "queryInHeader",
+                "xPaddingMethod": "tokenish",
+                "xmux": {
+                  "maxConcurrency": "16-32",
+                  "cMaxReuseTimes": 0,
+                  "hMaxReusableSecs": "1800-3000",
+                  "hKeepAlivePeriod": 0
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "remarks": "${SERVER_NAME}_mode-3"
+}
