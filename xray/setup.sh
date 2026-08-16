@@ -71,7 +71,7 @@ PRIVATE_KEY=$(echo "$KEY_OUTPUT" | awk 'tolower($0) ~ /private/ { print $NF; exi
 PUBLIC_KEY=$(echo "$KEY_OUTPUT"  | awk 'tolower($0) ~ /public/  { print $NF; exit }')
 
 SHORT_ID=$(openssl rand -hex 8)
-XHTTP_PATH="/$(xray uuid)"
+XHTTP_PATH="/$(openssl rand -hex 16)"
 
 VLESSENC_OUTPUT=$(xray vlessenc 2>&1)
 VLESS_ENC=$(echo "$VLESSENC_OUTPUT" | awk -F'"' '/ML-KEM/{found=1} found && /"encryption"/{print $4; exit}')
