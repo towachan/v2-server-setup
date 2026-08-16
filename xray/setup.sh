@@ -80,6 +80,9 @@ HOST_IP=$(hostname -I | cut -d' ' -f1)
 
 # nginx config
 mkdir -p /var/www/dist
+mkdir -p /usr/local/nginx/logs
+echo '' > /usr/local/nginx/logs/access.log
+echo '' > /usr/local/nginx/logs/error.log
 curl -L --fail --retry 3 -H 'Cache-Control: no-cache, no-store, must-revalidate' -H 'Pragma: no-cache' -H 'Expires: 0' -o /var/www/dist/index.html https://raw.githubusercontent.com/towachan/v2-server-setup/refs/heads/main/xray/tmpl/tmpl_index.html
 
 mkdir -p ~/tmpl
@@ -112,9 +115,7 @@ fi
 
 curl -L --fail --retry 3 -H 'Cache-Control: no-cache, no-store, must-revalidate' -H 'Pragma: no-cache' -H 'Expires: 0' -o ~/log-clean.sh https://raw.githubusercontent.com/towachan/v2-server-setup/refs/heads/main/log-clean.sh
 chmod +x ~/log-clean.sh
-echo "0 0 * * * ~/log-clean.sh > /dev/null" > ~/cronjob
-crontab ~/cronjob
-crontab -l
+(crontab -l 2>/dev/null; echo "0 0 * * * ~/log-clean.sh > /dev/null") | crontab -
 
 # xray config
 curl -L --fail --retry 3 -H 'Cache-Control: no-cache, no-store, must-revalidate' -H 'Pragma: no-cache' -H 'Expires: 0' -o ~/tmpl/tmpl_xray_config.json https://raw.githubusercontent.com/towachan/v2-server-setup/refs/heads/main/xray/tmpl/tmpl_xray_config.json
@@ -123,6 +124,7 @@ render_template_vars ~/tmpl/tmpl_xray_config.json /usr/local/etc/xray/config.jso
 sudo xray run -test -config /usr/local/etc/xray/config.json
 sudo systemctl enable --now xray
 sudo systemctl restart xray
+sudo systemctl restart nginx
 
 # client config
 mkdir -p ~/client-configs
