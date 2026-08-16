@@ -14,6 +14,38 @@ if [[ -z "$NAME" || -z "$DOMAIN_1" || -z "$DOMAIN_2" || -z "$email" || -z "$cf_k
     exit 1
 fi
 
+render_template_vars() {
+    local src="$1"
+    local dst="${2:-$src}"
+    local tmp line token var value
+
+    [[ -f "$src" ]] || {
+        echo "Template file not found: $src" >&2
+        return 1
+    }
+
+    tmp=$(mktemp)
+
+    while IFS= read -r line || [[ -n "$line" ]]; do
+        while [[ "$line" =~ \$\{[A-Za-z_][A-Za-z0-9_]*\} ]]; do
+            token="${BASH_REMATCH[0]}"
+            var="${token#\$\{}"
+            var="${var%\}}"
+
+            if [[ -n "${!var+x}" ]]; then
+                value="${!var}"
+                line="${line//"$token"/"$value"}"
+            else
+                line="${line//"$token"/}"
+            fi
+        done
+
+        printf '%s\n' "$line" >> "$tmp"
+    done < "$src"
+
+    mv "$tmp" "$dst"
+}
+
 timedatectl set-timezone Asia/Hong_Kong
 
 # install
@@ -72,9 +104,8 @@ curl -L https://raw.githubusercontent.com/towachan/v2-server-setup/refs/heads/ma
 mkdir -p ~/tmpl
 
 curl -L https://raw.githubusercontent.com/towachan/v2-server-setup/refs/heads/main/xray/tmpl/tmpl_nginx.conf -o ~/tmpl/tmpl_nginx.conf
-cat > /etc/nginx/nginx.conf << NGINXEOF
-@@include ~/tmpl/tmpl_nginx.conf
-NGINXEOF
+
+render_template_vars ~/tmpl/tmpl_nginx.conf /etc/nginx/nginx.conf
 
 nginx -t && systemctl restart nginx
 
@@ -86,9 +117,7 @@ crontab -l
 
 # xray config
 curl -L https://raw.githubusercontent.com/towachan/v2-server-setup/refs/heads/main/xray/tmpl/tmpl_xray_config.json -o ~/tmpl/tmpl_xray_config.json
-cat > /usr/local/etc/xray/config.json << XRAYEOF
-@@include ~/tmpl/tmpl_xray_config.json
-XRAYEOF
+render_template_vars ~/tmpl/tmpl_xray_config.json /usr/local/etc/xray/config.json
 
 sudo xray run -test -config /usr/local/etc/xray/config.json
 sudo systemctl enable --now xray
@@ -101,21 +130,10 @@ curl -L https://raw.githubusercontent.com/towachan/v2-server-setup/refs/heads/ma
 curl -L https://raw.githubusercontent.com/towachan/v2-server-setup/refs/heads/main/xray/tmpl/tmpl_mode5_client-config.json -o ~/client-configs/tmpl_mode5_client-config.json
 curl -L https://raw.githubusercontent.com/towachan/v2-server-setup/refs/heads/main/xray/tmpl/tmpl_mihomo_config.json -o ~/client-configs/tmpl_mihomo_config.json
 
-cat > "~/client-configs/mode3_client-config.json" << CLIENTEOF
-@@include ~/client-configs/tmpl_mode3_client-config.json
-CLIENTEOF
-
-cat > "~/client-configs/mode4_client-config.json" << CLIENTEOF
-@@include ~/client-configs/tmpl_mode4_client-config.json
-CLIENTEOF
-
-cat > "~/client-configs/mode5_client-config.json" << CLIENTEOF
-@@include ~/client-configs/tmpl_mode5_client-config.json
-CLIENTEOF
-
-cat > "~/client-configs/mihomo_config.json" << CLIENTEOF
-@@include ~/client-configs/tmpl_mihomo_config.json
-CLIENTEOF
+render_template_vars ~/client-configs/tmpl_mode3_client-config.json ~/client-configs/mode3_client-config.json
+render_template_vars ~/client-configs/tmpl_mode4_client-config.json ~/client-configs/mode4_client-config.json
+render_template_vars ~/client-configs/tmpl_mode5_client-config.json ~/client-configs/mode5_client-config.json
+render_template_vars ~/client-configs/tmpl_mihomo_config.json ~/client-configs/mihomo_config.json
 
 # enable ufw
 ufw allow ${ssh_port}
