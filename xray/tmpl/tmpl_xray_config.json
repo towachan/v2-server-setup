@@ -80,7 +80,7 @@
         "network": "xhttp",
         "xhttpSettings": {
           "host": "",
-          "path": "/${XHTTP_PATH}",
+          "path": "${XHTTP_PATH}",
           "mode": "auto",
           "xPaddingObfsMode": true,
           "xPaddingKey": "x_padding",

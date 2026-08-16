@@ -1,73 +1,139 @@
 {
-  "outbound": {
-    "protocol": "vless",
-    "settings": {
-      "address": "${HOST_IP}",
-      "port": 443,
-      "id": "${UUID_2}",
-      "flow": "",
-      "encryption": "${VLESS_ENC}"
+  "log": {
+    "loglevel": "warning"
+  },
+  "inbounds": [
+    {
+      "tag": "socks-in",
+      "listen": "127.0.0.1",
+      "port": 10808,
+      "protocol": "socks",
+      "settings": {
+        "udp": true
+      }
     },
-    "streamSettings": {
-      "network": "xhttp",
-      "security": "reality",
-      "realitySettings": {
-        "publicKey": "${PUBLIC_KEY}",
-        "fingerprint": "chrome",
-        "serverName": "${REALITY_DOMAIN}",
-        "shortId": "${SHORT_ID}"
+    {
+      "tag": "http-in",
+      "listen": "127.0.0.1",
+      "port": 10809,
+      "protocol": "http",
+      "settings": {}
+    }
+  ],
+  "outbounds": [
+    {
+      "protocol": "vless",
+      "settings": {
+        "address": "${HOST_IP}",
+        "port": 443,
+        "id": "${UUID_2}",
+        "flow": "",
+        "encryption": "${VLESS_ENC}"
       },
-      "xhttpSettings": {
-        "path": "${XHTTP_PATH}",
-        "host": "${CDN_DOMAIN}",
-        "mode": "auto",
-        "extra": {
-          "xPaddingObfsMode": true,
-          "xPaddingKey": "x_padding",
-          "xPaddingHeader": "Referer",
-          "xPaddingPlacement": "queryInHeader",
-          "xPaddingMethod": "tokenish",
-          "xmux": {
-            "maxConcurrency": "16-32",
-            "cMaxReuseTimes": 0,
-            "hMaxReusableSecs": "1800-3000",
-            "hKeepAlivePeriod": 0
-          },
-          "downloadSettings": {
-            "address": "${CDN_DOMAIN}",
-            "port": 443,
-            "network": "xhttp",
-            "security": "tls",
-            "tlsSettings": {
-              "serverName": "${CDN_DOMAIN}",
-              "allowInsecure": false,
-              "alpn": [
-                "h2"
-              ],
-              "fingerprint": "chrome"
+      "streamSettings": {
+        "network": "xhttp",
+        "security": "reality",
+        "realitySettings": {
+          "publicKey": "${PUBLIC_KEY}",
+          "fingerprint": "chrome",
+          "serverName": "${REALITY_DOMAIN}",
+          "shortId": "${SHORT_ID}"
+        },
+        "xhttpSettings": {
+          "path": "${XHTTP_PATH}",
+          "host": "${CDN_DOMAIN}",
+          "mode": "auto",
+          "extra": {
+            "xPaddingObfsMode": true,
+            "xPaddingKey": "x_padding",
+            "xPaddingHeader": "Referer",
+            "xPaddingPlacement": "queryInHeader",
+            "xPaddingMethod": "tokenish",
+            "xmux": {
+              "maxConcurrency": "16-32",
+              "cMaxReuseTimes": 0,
+              "hMaxReusableSecs": "1800-3000",
+              "hKeepAlivePeriod": 0
             },
-            "xhttpSettings": {
-              "host": "${CDN_DOMAIN}",
-              "path": "${XHTTP_PATH}",
-              "mode": "auto",
-              "extra": {
-                "xPaddingObfsMode": true,
-                "xPaddingKey": "x_padding",
-                "xPaddingHeader": "Referer",
-                "xPaddingPlacement": "queryInHeader",
-                "xPaddingMethod": "tokenish",
-                "xmux": {
-                  "maxConcurrency": "16-32",
-                  "cMaxReuseTimes": 0,
-                  "hMaxReusableSecs": "1800-3000",
-                  "hKeepAlivePeriod": 0
+            "downloadSettings": {
+              "address": "${CDN_DOMAIN}",
+              "port": 443,
+              "network": "xhttp",
+              "security": "tls",
+              "tlsSettings": {
+                "serverName": "${CDN_DOMAIN}",
+                "allowInsecure": false,
+                "alpn": [
+                  "h2"
+                ],
+                "fingerprint": "chrome"
+              },
+              "xhttpSettings": {
+                "host": "${CDN_DOMAIN}",
+                "path": "${XHTTP_PATH}",
+                "mode": "auto",
+                "extra": {
+                  "xPaddingObfsMode": true,
+                  "xPaddingKey": "x_padding",
+                  "xPaddingHeader": "Referer",
+                  "xPaddingPlacement": "queryInHeader",
+                  "xPaddingMethod": "tokenish",
+                  "xmux": {
+                    "maxConcurrency": "16-32",
+                    "cMaxReuseTimes": 0,
+                    "hMaxReusableSecs": "1800-3000",
+                    "hKeepAlivePeriod": 0
+                  }
                 }
               }
             }
           }
         }
       }
+    },
+    {
+      "tag": "direct",
+      "protocol": "freedom"
+    },
+    {
+      "tag": "block",
+      "protocol": "blackhole"
     }
-  },
-  "remarks": "${SERVER_NAME}_mode-5"
+  ],
+  "routing": {
+    "domainStrategy": "IPIfNonMatch",
+    "rules": [
+      {
+        "domain": [
+          "geosite:category-ads-all"
+        ],
+        "outboundTag": "block"
+      },
+      {
+        "domain": [
+          "geosite:cn"
+        ],
+        "outboundTag": "direct"
+      },
+      {
+        "domain": [
+          "geosite:geolocation-!cn"
+        ],
+        "outboundTag": "proxy"
+      },
+      {
+        "ip": [
+          "223.5.5.5"
+        ],
+        "outboundTag": "direct"
+      },
+      {
+        "ip": [
+          "geoip:cn",
+          "geoip:private"
+        ],
+        "outboundTag": "direct"
+      }
+    ]
+  }
 }
