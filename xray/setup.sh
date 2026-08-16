@@ -131,12 +131,12 @@ mkdir -p ~/client-configs
 curl -L --fail --retry 3 -H 'Cache-Control: no-cache, no-store, must-revalidate' -H 'Pragma: no-cache' -H 'Expires: 0' -o ~/client-configs/tmpl_mode3_client-config.json https://raw.githubusercontent.com/towachan/v2-server-setup/refs/heads/main/xray/tmpl/tmpl_mode3_client-config.json
 curl -L --fail --retry 3 -H 'Cache-Control: no-cache, no-store, must-revalidate' -H 'Pragma: no-cache' -H 'Expires: 0' -o ~/client-configs/tmpl_mode4_client-config.json https://raw.githubusercontent.com/towachan/v2-server-setup/refs/heads/main/xray/tmpl/tmpl_mode4_client-config.json
 curl -L --fail --retry 3 -H 'Cache-Control: no-cache, no-store, must-revalidate' -H 'Pragma: no-cache' -H 'Expires: 0' -o ~/client-configs/tmpl_mode5_client-config.json https://raw.githubusercontent.com/towachan/v2-server-setup/refs/heads/main/xray/tmpl/tmpl_mode5_client-config.json
-curl -L --fail --retry 3 -H 'Cache-Control: no-cache, no-store, must-revalidate' -H 'Pragma: no-cache' -H 'Expires: 0' -o ~/client-configs/tmpl_mihomo_config.json https://raw.githubusercontent.com/towachan/v2-server-setup/refs/heads/main/xray/tmpl/tmpl_mihomo_config.json
+curl -L --fail --retry 3 -H 'Cache-Control: no-cache, no-store, must-revalidate' -H 'Pragma: no-cache' -H 'Expires: 0' -o ~/client-configs/tmpl_mihomo_config.yaml https://raw.githubusercontent.com/towachan/v2-server-setup/refs/heads/main/xray/tmpl/tmpl_mihomo_config.yaml
 
 render_template_vars ~/client-configs/tmpl_mode3_client-config.json ~/client-configs/mode3_client-config.json
 render_template_vars ~/client-configs/tmpl_mode4_client-config.json ~/client-configs/mode4_client-config.json
 render_template_vars ~/client-configs/tmpl_mode5_client-config.json ~/client-configs/mode5_client-config.json
-render_template_vars ~/client-configs/tmpl_mihomo_config.json ~/client-configs/mihomo_config.json
+render_template_vars ~/client-configs/tmpl_mihomo_config.yaml ~/client-configs/mihomo_config.yaml
 
 # enable ufw
 ufw allow ${ssh_port}
