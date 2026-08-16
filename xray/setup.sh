@@ -61,6 +61,7 @@ sudo bash -c "$(curl -L https://github.com/XTLS/Xray-install/raw/main/install-re
 NOBODY_GROUP=$(id -gn nobody)
 CDN_DOMAIN="${NAME}.${DOMAIN_1}"
 REALITY_DOMAIN="${NAME}.${DOMAIN_2}"
+SERVER_NAME=${NAME}
 
 UUID_1=$(xray uuid)
 UUID_2=$(xray uuid)
@@ -129,15 +130,15 @@ sudo systemctl restart nginx
 
 # client config
 mkdir -p ~/client-configs
-curl -L --fail --retry 3 -H 'Cache-Control: no-cache, no-store, must-revalidate' -H 'Pragma: no-cache' -H 'Expires: 0' -o ~/client-configs/tmpl_mode3_client-config.json https://raw.githubusercontent.com/towachan/v2-server-setup/refs/heads/main/xray/tmpl/tmpl_mode3_client-config.json?$(date +%s)
-curl -L --fail --retry 3 -H 'Cache-Control: no-cache, no-store, must-revalidate' -H 'Pragma: no-cache' -H 'Expires: 0' -o ~/client-configs/tmpl_mode4_client-config.json https://raw.githubusercontent.com/towachan/v2-server-setup/refs/heads/main/xray/tmpl/tmpl_mode4_client-config.json?$(date +%s)
-curl -L --fail --retry 3 -H 'Cache-Control: no-cache, no-store, must-revalidate' -H 'Pragma: no-cache' -H 'Expires: 0' -o ~/client-configs/tmpl_mode5_client-config.json https://raw.githubusercontent.com/towachan/v2-server-setup/refs/heads/main/xray/tmpl/tmpl_mode5_client-config.json?$(date +%s)
-curl -L --fail --retry 3 -H 'Cache-Control: no-cache, no-store, must-revalidate' -H 'Pragma: no-cache' -H 'Expires: 0' -o ~/client-configs/tmpl_mihomo_config.yaml https://raw.githubusercontent.com/towachan/v2-server-setup/refs/heads/main/xray/tmpl/tmpl_mihomo_config.yaml?$(date +%s)
+curl -L --fail --retry 3 -H 'Cache-Control: no-cache, no-store, must-revalidate' -H 'Pragma: no-cache' -H 'Expires: 0' -o ~/tmpl/tmpl_mode3_client-config.json https://raw.githubusercontent.com/towachan/v2-server-setup/refs/heads/main/xray/tmpl/tmpl_mode3_client-config.json?$(date +%s)
+curl -L --fail --retry 3 -H 'Cache-Control: no-cache, no-store, must-revalidate' -H 'Pragma: no-cache' -H 'Expires: 0' -o ~/tmpl/tmpl_mode4_client-config.json https://raw.githubusercontent.com/towachan/v2-server-setup/refs/heads/main/xray/tmpl/tmpl_mode4_client-config.json?$(date +%s)
+curl -L --fail --retry 3 -H 'Cache-Control: no-cache, no-store, must-revalidate' -H 'Pragma: no-cache' -H 'Expires: 0' -o ~/tmpl/tmpl_mode5_client-config.json https://raw.githubusercontent.com/towachan/v2-server-setup/refs/heads/main/xray/tmpl/tmpl_mode5_client-config.json?$(date +%s)
+curl -L --fail --retry 3 -H 'Cache-Control: no-cache, no-store, must-revalidate' -H 'Pragma: no-cache' -H 'Expires: 0' -o ~/tmpl/tmpl_mihomo_config.yaml https://raw.githubusercontent.com/towachan/v2-server-setup/refs/heads/main/xray/tmpl/tmpl_mihomo_config.yaml?$(date +%s)
 
-render_template_vars ~/client-configs/tmpl_mode3_client-config.json ~/client-configs/mode3_client-config.json
-render_template_vars ~/client-configs/tmpl_mode4_client-config.json ~/client-configs/mode4_client-config.json
-render_template_vars ~/client-configs/tmpl_mode5_client-config.json ~/client-configs/mode5_client-config.json
-render_template_vars ~/client-configs/tmpl_mihomo_config.yaml ~/client-configs/mihomo_config.yaml
+render_template_vars ~/tmpl/tmpl_mode3_client-config.json ~/client-configs/mode3_client-config.json
+render_template_vars ~/tmpl/tmpl_mode4_client-config.json ~/client-configs/mode4_client-config.json
+render_template_vars ~/tmpl/tmpl_mode5_client-config.json ~/client-configs/mode5_client-config.json
+render_template_vars ~/tmpl/tmpl_mihomo_config.yaml ~/client-configs/mihomo_config.yaml
 
 # enable ufw
 ufw allow ${ssh_port}
