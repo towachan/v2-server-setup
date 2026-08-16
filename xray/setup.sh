@@ -58,6 +58,7 @@ sudo rm -f /etc/nginx/sites-enabled/default
 sudo bash -c "$(curl -L https://github.com/XTLS/Xray-install/raw/main/install-release.sh)" @ install
 
 # var setup
+NOBODY_GROUP=$(id -gn nobody)
 CDN_DOMAIN="${NAME}.${DOMAIN_1}"
 REALITY_DOMAIN="${NAME}.${DOMAIN_2}"
 
@@ -76,6 +77,18 @@ VLESS_ENC=$(echo "$VLESSENC_OUTPUT" | awk -F'"' '/ML-KEM/{found=1} found && /"en
 VLESS_DEC=$(echo "$VLESSENC_OUTPUT" | awk -F'"' '/ML-KEM/{found=1} found && /"decryption"/{print $4; exit}')
 
 HOST_IP=$(hostname -I | cut -d' ' -f1)
+
+# nginx config
+mkdir -p /var/www/dist
+curl -L --fail --retry 3 -H 'Cache-Control: no-cache, no-store, must-revalidate' -H 'Pragma: no-cache' -H 'Expires: 0' -o /var/www/dist/index.html https://raw.githubusercontent.com/towachan/v2-server-setup/refs/heads/main/xray/tmpl/tmpl_index.html
+
+mkdir -p ~/tmpl
+
+curl -L --fail --retry 3 -H 'Cache-Control: no-cache, no-store, must-revalidate' -H 'Pragma: no-cache' -H 'Expires: 0' -o ~/tmpl/tmpl_nginx.conf https://raw.githubusercontent.com/towachan/v2-server-setup/refs/heads/main/xray/tmpl/tmpl_nginx.conf
+
+render_template_vars ~/tmpl/tmpl_nginx.conf /etc/nginx/nginx.conf
+
+nginx -t
 
 # ACME
 CERT_FILE="/etc/ssl/nginx/fullchain.cer"
@@ -96,18 +109,6 @@ else
         --key-file "$KEY_FILE" \
         --reloadcmd     "systemctl reload nginx"
 fi
-
-# nginx config
-mkdir -p /var/www/dist
-curl -L --fail --retry 3 -H 'Cache-Control: no-cache, no-store, must-revalidate' -H 'Pragma: no-cache' -H 'Expires: 0' -o /var/www/dist/index.html https://raw.githubusercontent.com/towachan/v2-server-setup/refs/heads/main/xray/tmpl/tmpl_index.html
-
-mkdir -p ~/tmpl
-
-curl -L --fail --retry 3 -H 'Cache-Control: no-cache, no-store, must-revalidate' -H 'Pragma: no-cache' -H 'Expires: 0' -o ~/tmpl/tmpl_nginx.conf https://raw.githubusercontent.com/towachan/v2-server-setup/refs/heads/main/xray/tmpl/tmpl_nginx.conf
-
-render_template_vars ~/tmpl/tmpl_nginx.conf /etc/nginx/nginx.conf
-
-nginx -t && systemctl restart nginx
 
 curl -L --fail --retry 3 -H 'Cache-Control: no-cache, no-store, must-revalidate' -H 'Pragma: no-cache' -H 'Expires: 0' -o ~/log-clean.sh https://raw.githubusercontent.com/towachan/v2-server-setup/refs/heads/main/log-clean.sh
 chmod +x ~/log-clean.sh

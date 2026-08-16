@@ -46,9 +46,9 @@
           "serverNames": [
             "${REALITY_DOMAIN}"
           ],
-          "privateKey": "${REALITY_PRIVATE_KEY}",
+          "privateKey": "${PRIVATE_KEY}",
           "shortIds": [
-            "${REALITY_SHORT_ID}"
+            "${SHORT_ID}"
           ]
         },
         "sniffing": {
